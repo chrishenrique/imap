@@ -52,6 +52,7 @@ class Headers extends Parameters
             case 'date':
                 $value = $this->decode($value);
                 $value = preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
+                $value = $this->normalizeDate($value);
 
                 return new \DateTime($value);
             case 'from':
@@ -79,5 +80,32 @@ class Headers extends Parameters
             isset($value->host) ? $value->host : null,
             isset($value->personal) ? $this->decode($value->personal) : null
         );
+    }
+
+    private function normalizeDate($value)
+    {
+        $months = [
+            1 => 'Jan',
+            2 => 'Feb',
+            3 => 'Mar',
+            4 => 'Apr',
+            5 => 'May',
+            6 => 'Jun',
+            7 => 'Jul',
+            8 => 'Aug',
+            9 => 'Sep',
+            10 => 'Oct',
+            11 => 'Nov',
+            12 => 'Dec',
+        ];
+        $date = explode(' ', $value);
+        $month = is_numeric($date[2]) ? (int)$date[2] : null;
+
+        if (!empty($months[$month])) {
+            $date[2] = $months[$date[2]];
+            $value = implode(' ', $date);
+        }
+
+        return $value;
     }
 }
