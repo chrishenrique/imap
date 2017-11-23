@@ -52,7 +52,7 @@ class Headers extends Parameters
             case 'date':
                 $value = $this->decode($value);
                 $value = preg_replace('/([^\(]*)\(.*\)/', '$1', $value);
-                $value = $this->normalizeDate($value);
+                $value = $this->normalizeDate(trim(preg_replace('/\s+/', ' ', $value)));
 
                 return new \DateTime($value);
             case 'from':
